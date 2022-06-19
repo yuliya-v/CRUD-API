@@ -3,6 +3,18 @@ import server from "../server";
 
 describe('Scenario 2', () => {
 
+  it('Should find no route', (done) => {
+    request(server)
+      .get('/api/use')
+      .set('Accept', 'application/json')
+      .then(response => {
+        expect(response.status).toEqual(404);
+        expect(response.body.message).toEqual("Route not found");
+        done();
+    })
+    .catch(err => done(err));
+  });
+
   it('Should return no records', (done) => {
     request(server)
     .get('/api/users')

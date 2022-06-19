@@ -63,14 +63,18 @@ class UsersController {
     });
 
     req.on('end', async () => {
-      const data: Omit<User, 'id'> = JSON.parse(body);
-      if (!isNewDataValid(data)) {
-        await this.handleInvalidData(res);
-        return;
+      try {
+        const data: Omit<User, 'id'> = JSON.parse(body);
+        if (!isNewDataValid(data)) {
+          await this.handleInvalidData(res);
+          return;
+        }
+        const updatedRecord = await userModel.update(data, id);
+        res.writeHead(200, headers);
+        res.end(JSON.stringify(updatedRecord));
+      } catch {
+        this.handleInternalError(res);
       }
-      const updatedRecord = await userModel.update(data, id);
-      res.writeHead(200, headers);
-      res.end(JSON.stringify(updatedRecord));
     });
   }
 

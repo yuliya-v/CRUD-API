@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start:dev": "nodemon src/index.ts",
-    "start:prod": "tsc && node dist/index.js"
+    "start:prod": "tsc && node dist/index.js",
+    "start:multi": "tsc && node dist/cluster.js"
   },
   "repository": {
     "type": "git",

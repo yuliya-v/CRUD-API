@@ -7,13 +7,13 @@ const headers = { 'Content-Type': 'application/json' };
 
 class UsersController {
 
-  async getAllUsers(res: http.ServerResponse) {
+  async getAllUsers(res: http.ServerResponse): Promise<void> {
     const data = await userModel.getAll();
     res.writeHead(200, headers);
     res.end(JSON.stringify(data));
   }
 
-  async createRecord(req: http.IncomingMessage, res: http.ServerResponse) {
+  async createRecord(req: http.IncomingMessage, res: http.ServerResponse): Promise<void> {
     let body = '';
 
     req.on('data', (chunk: Buffer) => {
@@ -32,7 +32,7 @@ class UsersController {
     });
   }
 
-  async findRecord(id: string, res: http.ServerResponse) {
+  async findRecord(id: string, res: http.ServerResponse): Promise<void> {
     if (!validate(id)) {
       await this.handleInvalidId(res);
       return;
@@ -47,7 +47,7 @@ class UsersController {
     }
   }
 
-  async updateRecord(id: string, req: http.IncomingMessage, res: http.ServerResponse, ) {
+  async updateRecord(id: string, req: http.IncomingMessage, res: http.ServerResponse, ): Promise<void> {
     if (!validate(id)) {
       await this.handleInvalidId(res);
       return;
@@ -70,7 +70,7 @@ class UsersController {
     });
   }
 
-  async deleteRecord(id: string, res: http.ServerResponse, ) {
+  async deleteRecord(id: string, res: http.ServerResponse): Promise<void> {
     if (!validate(id)) {
       await this.handleInvalidId(res);
       return;
@@ -85,17 +85,17 @@ class UsersController {
     }
   }
 
-  private async handleInvalidId(res: http.ServerResponse) {
+  private async handleInvalidId(res: http.ServerResponse): Promise<void> {
     res.writeHead(400, headers);
     res.end(JSON.stringify({ message: 'User ID is invalid' }));
   }
 
-  private async handleNonExistentId(res: http.ServerResponse) {
+  private async handleNonExistentId(res: http.ServerResponse): Promise<void> {
     res.writeHead(404, headers);
     res.end(JSON.stringify({ message: 'User doesn\'t exist' }));
   }
 
-  private async handleInvalidData(res: http.ServerResponse) {
+  private async handleInvalidData(res: http.ServerResponse): Promise<void> {
     res.writeHead(400, headers);
     res.end(JSON.stringify({ message: "Body does not contain required fields: username (string), age(number), hobbies(array of strings or empty array)" }));
   }

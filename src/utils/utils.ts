@@ -1,6 +1,6 @@
 import { User } from "../models/UsersModel";
 
-export const isNewDataValid = (data: Omit<User, 'id'>) => {
+export const isNewDataValid = (data: Omit<User, 'id'>): boolean => {
   if (typeof data.username !== 'string'
     || !data.username.trim().length
     || typeof data.age !== 'number'

@@ -21,14 +21,18 @@ class UsersController {
     });
 
     req.on('end', async () => {
-      const data: Omit<User, 'id'> = JSON.parse(body);
-      if (!isNewDataValid(data)) {
-        await this.handleInvalidData(res);
-        return;
-      } 
-      const newRecord = await userModel.create(data);
-      res.writeHead(201, headers);
-      res.end(JSON.stringify(newRecord));
+      try {
+        const data: Omit<User, 'id'> = JSON.parse(body);
+        if (!isNewDataValid(data)) {
+          await this.handleInvalidData(res);
+          return;
+        } 
+        const newRecord = await userModel.create(data);
+        res.writeHead(201, headers);
+        res.end(JSON.stringify(newRecord));
+      } catch {
+        this.handleInternalError(res);
+      }
     });
   }
 
@@ -98,6 +102,11 @@ class UsersController {
   private async handleInvalidData(res: http.ServerResponse): Promise<void> {
     res.writeHead(400, headers);
     res.end(JSON.stringify({ message: "Body does not contain required fields: username (string), age(number), hobbies(array of strings or empty array)" }));
+  }
+
+  private async handleInternalError(res: http.ServerResponse): Promise<void> {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ message: "Internal server error" }));
   }
 }
 
